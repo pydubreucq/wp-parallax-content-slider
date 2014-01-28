@@ -371,7 +371,7 @@ DYNAMICOUTPUT;
 		$outputSlide .= "<h2>".$title."</h2>"."\n";
 		$outputSlide .= "<p>".$excerpt."</p>"."\n";
 		$outputSlide .= "<a href='".$link_article."' class='da-link'>" . __( 'Read more', 'wp-parallax-content-slider' ) . "</a>"."\n";
-		$outputSlide .= "<div class='da-img'><img src='".$url_image."' alt='".$alt_image."' /></div>"."\n";
+		$outputSlide .= "<div class='da-img'><img src='".$url_image."' alt='".$alt_image."' width='".$image_width."' height='".$image_height."'  /></div>"."\n";
 		$outputSlide .= "</div>"."\n";
 
 		$outputSlide = apply_filters( 'prlx_slide_content', $outputSlide, $this );
