@@ -298,6 +298,8 @@ class WpParallaxContentSlider
 				$thumb = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
 				$url = $thumb['0'];
 				$default_slide_image = $url;
+                                $image_width = $thumb['1'];
+                                $image_height = $thumb['2'];
 			}
 			else if ( has_content_image( ) != '' ){
 			//	echo get_content_image_urls( get_the_content() );
@@ -310,12 +312,16 @@ class WpParallaxContentSlider
 															get_the_excerpt(),
 															get_permalink(),
 															$default_slide_image,
+															$image_width,
+                                                                                                                        $image_height,
 															$prlx_title_max_chars )."\n";
 			} else {
 				$outputDynamic .= $this->get_article_slide( get_the_title(),
 															get_the_content(),
 															get_permalink(),
 															$default_slide_image,
+															$image_width,
+                                                                                                                        $image_height,
 															$prlx_title_max_chars )."\n";
 			}
 
@@ -351,12 +357,14 @@ DYNAMICOUTPUT;
 	/*
 	 * Generate HTML output for an article slide
 	 */
-	function get_article_slide( $title, $excerpt, $link_article, $url_image, $title_length, $alt_image = 'Alternative text' )
+	function get_article_slide( $title, $excerpt, $link_article, $url_image, $title_length, $image_width, $image_height, $alt_image = 'Alternative text' )
 	{
 		// Parameters
 		if ( strlen( $title ) > $title_length ) $title = mb_substr( $title, 0, $title_length ) . "...";
 
 		$title = apply_filters( 'prlx_slide_title', $title, get_the_title() );
+
+		$alt_image = $title;
 
 		// Slide output
 		$outputSlide  = "<div class='da-slide'>"."\n";
