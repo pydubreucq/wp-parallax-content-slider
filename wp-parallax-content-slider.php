@@ -5,14 +5,10 @@
  * Description: A customizable JQuery content slider with CSS3 animations and parallax effects
  * Author URI: http://jltweb.info/
  * Author: Julien Le Thuaut (MBA Multimedia)
- * Version: 1.0-dev
+ * Version: 0.9.8
  * Licence: GPLv2
  *
- * Contributor: Chun Law
- * Contribution: 	Use first image in content if there is no thumbnail image.
- *					If no image in content, use default image
- *
-*/
+ */
 
 include_once plugin_dir_path( __FILE__ ) .'includes/content_functions.php';
 
@@ -161,17 +157,19 @@ class WpParallaxContentSlider
 	 * @param	boolean	$network_wide	True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
 	 */
 	public function uninstall( $network_wide ) {
+		/*
 		// if uninstall not called from WordPress exit
 		if ( !defined( 'WP_UNINSTALL_PLUGIN' ) )
 			exit ();
 
 		// Clean options in the database
 		delete_option( 'prlx_slider_settings' );
+		*/
 
 	} // end uninstall
 
 	/**
-	 * Enable shortcodes : 
+	 * Enable shortcodes :
 	 * [parallaxcontentslider]
 	 * [parallaxcontentslider cat="2"]
 	 * [parallaxcontentslider cat="2,5"]
@@ -181,7 +179,7 @@ class WpParallaxContentSlider
 		extract( shortcode_atts( array (
 										'categ' => '',
 									   ), $atts ) );
-		
+
 		get_wp_parallax_content_slider( $categ );
 	}
 
@@ -256,7 +254,7 @@ class WpParallaxContentSlider
 		}
 
 		$cat = '';
-		if ( ! empty( $category ) ) 
+		if ( ! empty( $category ) )
 		{
 			// Mode is forced to 'dynamic'
 			$prlx_slider_mode = 'dynamic';
@@ -292,14 +290,14 @@ class WpParallaxContentSlider
 		while ( $myposts->have_posts() ) : $myposts->the_post();
 
 			// $custom = get_post_custom($post->ID);
-						
+
 			// Display the post thumbnail if there is one (Thank you John)
 			if ( has_post_thumbnail() ) {
 				$thumb = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
 				$url = $thumb['0'];
 				$default_slide_image = $url;
-                                $image_width = $thumb['1'];
-                                $image_height = $thumb['2'];
+				$image_width = $thumb['1'];
+				$image_height = $thumb['2'];
 			}
 			else if ( has_content_image( ) != '' ){
 			//	echo get_content_image_urls( get_the_content() );
@@ -312,16 +310,14 @@ class WpParallaxContentSlider
 															get_the_excerpt(),
 															get_permalink(),
 															$default_slide_image,
+															$prlx_title_max_chars,
 															$image_width,
-                                                                                                                        $image_height,
-															$prlx_title_max_chars )."\n";
+															$image_height)."\n";
 			} else {
 				$outputDynamic .= $this->get_article_slide( get_the_title(),
 															get_the_content(),
 															get_permalink(),
 															$default_slide_image,
-															$image_width,
-                                                                                                                        $image_height,
 															$prlx_title_max_chars )."\n";
 			}
 
@@ -363,15 +359,18 @@ DYNAMICOUTPUT;
 		if ( strlen( $title ) > $title_length ) $title = mb_substr( $title, 0, $title_length ) . "...";
 
 		$title = apply_filters( 'prlx_slide_title', $title, get_the_title() );
-
+		
 		$alt_image = $title;
-
+		
+		// Image Dimension
+		//$size_image = getimagesize($url_image); // information on the dimensions of the image
+		
 		// Slide output
 		$outputSlide  = "<div class='da-slide'>"."\n";
 		$outputSlide .= "<h2>".$title."</h2>"."\n";
 		$outputSlide .= "<p>".$excerpt."</p>"."\n";
 		$outputSlide .= "<a href='".$link_article."' class='da-link'>" . __( 'Read more', 'wp-parallax-content-slider' ) . "</a>"."\n";
-		$outputSlide .= "<div class='da-img'><img src='".$url_image."' alt='".$alt_image."' width='".$image_width."' height='".$image_height."'  /></div>"."\n";
+		$outputSlide .= "<div class='da-img'><img src='".$url_image."' alt='".$alt_image."' width='".$image_width."' height='".$image_height."' /></div>"."\n";
 		$outputSlide .= "</div>"."\n";
 
 		$outputSlide = apply_filters( 'prlx_slide_content', $outputSlide, $this );
@@ -652,7 +651,7 @@ DYNAMICOUTPUT;
 					<tr>
 						<th scope="row"><?php _e( 'Number of articles to display', 'wp-parallax-content-slider' ); ?>:</th>
 						<td>
-							<input type="text" name="prlx_slider_nb_articles" id="prlx_slider_nb_articles" value="<?php echo $prlx_slider_settings['nb_articles']; ?>" maxlength="2" size="2" />
+							<input type="text" name="prlx_slider_nb_articles" id="prlx_slider_nb_articles" value="<?php echo $prlx_slider_settings['nb_articles']; ?>" maxlength="1" size="1" />
 							<label for="prlx_slider_nb_articles"><?php _e( 'Maximum number of articles to display in the dynamic slider', 'wp-parallax-content-slider' ); ?></label><br />
 						</td>
 					</tr>
